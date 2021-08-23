@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
     public static PlayerManager Instance { get; private set; }
     [HideInInspector] public PlayerController controller;
     [HideInInspector] public PlayerStat stat;
+    [HideInInspector] public PlayerAnim anim;
 
     private void Awake()
     {
@@ -15,5 +16,6 @@ public class PlayerManager : MonoBehaviour
 
         controller = GetComponent<PlayerController>();
         stat = GetComponent<PlayerStat>();
+        anim = GetComponent<PlayerAnim>();
     }
 }

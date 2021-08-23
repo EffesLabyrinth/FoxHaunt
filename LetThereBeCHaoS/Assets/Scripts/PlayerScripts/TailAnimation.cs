@@ -36,7 +36,7 @@ public class TailAnimation : MonoBehaviour
             lineRenderer.sortingOrder = 1;
             transform.Rotate(new Vector3(0, 180, 0), Space.Self);
         } 
-        else if(rb.velocity.z <= 0 && transform.localEulerAngles.y == 180)
+        else if(rb.velocity.z < 0 && transform.localEulerAngles.y == 180)
         {
             lineRenderer.sortingOrder = -1;
             transform.Rotate(new Vector3(0, -180, 0), Space.Self);

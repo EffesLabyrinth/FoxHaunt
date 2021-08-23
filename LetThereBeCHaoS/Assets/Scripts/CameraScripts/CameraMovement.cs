@@ -7,6 +7,8 @@ public class CameraMovement : MonoBehaviour
     CameraManager manager;
     Transform camerAnchor;
     Transform followTarget;
+    [SerializeField] float smoothTime;
+    Vector3 velocity;
     private void Awake()
     {
         manager = GetComponent<CameraManager>();
@@ -18,8 +20,12 @@ public class CameraMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
-        camerAnchor.position = followTarget.position;
+        Follow();
+    }
+    void Follow()
+    {
+        camerAnchor.position = Vector3.SmoothDamp(camerAnchor.position, followTarget.position,ref velocity, smoothTime * Time.deltaTime);
     }
 }
