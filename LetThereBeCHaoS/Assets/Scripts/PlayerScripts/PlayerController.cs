@@ -28,6 +28,11 @@ public class PlayerController : MonoBehaviour
     Vector2 dashDirection;
     [SerializeField] float dashDuration;
     float startDashDuration;
+
+    //attack
+    [SerializeField] float attackRadius;
+    [SerializeField] LayerMask whatIsEnemy;
+    [SerializeField] GameObject[] attackPattern;
     void Awake()
     {
         manager = GetComponent<PlayerManager>();
@@ -61,6 +66,7 @@ public class PlayerController : MonoBehaviour
                 {
                     jumpTrigger = true;
                     startJumpCount = manager.stat.GetMaxJumpCount() - 1;
+                    startDashCount = manager.stat.GetMaxDashCount();
                 }
             }
             else if (startJumpCount > 0)
@@ -82,6 +88,10 @@ public class PlayerController : MonoBehaviour
                 dashTrigger = true;
                 startDashCount--;
             }
+        }
+        if (Input.GetMouseButtonDown(0) && !dashTrigger && startDashDuration <= 0) 
+        {
+            Attack();
         }
     }
     void ExecuteAction()
@@ -112,7 +122,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector3(rb.velocity.x, manager.stat.GetJumpPower(), rb.velocity.z);
     }
-    private void Move()
+    void Move()
     {
         direction = direction.normalized * manager.stat.GetMoveSpeed();
         rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
@@ -123,8 +133,36 @@ public class PlayerController : MonoBehaviour
         dashDirection = dashDirection.normalized * manager.stat.GetDashSpeed();
 
         rb.velocity = new Vector3(dashDirection.x, rb.velocity.y, dashDirection.y);
+        manager.anim.DashAfterEffect(dashDuration);
     }
-    
+    void Attack()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, attackRadius, whatIsEnemy);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit, 100, whatIsGround);
+        Vector3 attackDir;
+        Vector3 attackPos;
+        if (colliders.Length > 0)
+        {
+            GameObject temp = Instantiate(attackPattern[Random.Range(0, attackPattern.Length)], colliders[0].transform.position, Quaternion.identity);
+            temp.transform.forward = (colliders[0].transform.position - transform.position).normalized;
+        }
+        else
+        {
+            if ((hit.point - transform.position).sqrMagnitude > attackRadius * attackRadius)
+            {
+                attackDir = (hit.point - transform.position).normalized;
+                attackPos = transform.position + attackDir * attackRadius;
+            }
+            else
+            {
+                attackPos = hit.point;
+            }
+            GameObject temp = Instantiate(attackPattern[Random.Range(0, attackPattern.Length)], attackPos, Quaternion.identity);
+            temp.transform.forward = (attackPos - transform.position).normalized;
+        }
+    }
     bool GroundCheck()
     {
         return (Physics.OverlapSphere(groundCheckPos.position, groundCheckRadius, whatIsGround)).Length > 0;
@@ -147,6 +185,6 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(groundCheckPos.position, groundCheckRadius);
+        Gizmos.DrawWireSphere(transform.position,attackRadius);
     }
 }

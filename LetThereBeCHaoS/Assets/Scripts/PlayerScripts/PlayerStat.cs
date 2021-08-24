@@ -14,6 +14,8 @@ public class PlayerStat : MonoBehaviour
 
     [SerializeField] float dashSpeed;
     [SerializeField] int maxDashCount;
+
+    [SerializeField] float strength;
     private void Awake()
     {
         manager = GetComponent<PlayerManager>();
@@ -25,4 +27,5 @@ public class PlayerStat : MonoBehaviour
     public int GetMaxJumpCount() { return maxJumpCount; }
     public float GetDashSpeed() { return dashSpeed; }
     public int GetMaxDashCount() { return maxDashCount; }
+    public float GetStrength() { return strength; }
 }

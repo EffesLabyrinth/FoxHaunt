@@ -15,6 +15,10 @@ public class TailAnimation : MonoBehaviour
     [SerializeField] Transform targetDir;
     [SerializeField] float targetDistance;
 
+    [SerializeField] float wiggleSpeed;
+    [SerializeField] float wiggleMagnitude;
+    [SerializeField] Transform wiggleDir;
+
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -31,6 +35,8 @@ public class TailAnimation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        wiggleDir.localRotation = Quaternion.Euler(0, Mathf.Sin(Time.time * wiggleSpeed) * wiggleMagnitude, 0);
+
         if (rb.velocity.z > 0 && transform.localEulerAngles.y == 0)
         {
             lineRenderer.sortingOrder = 1;
@@ -45,8 +51,9 @@ public class TailAnimation : MonoBehaviour
         segmentPoses[0] = targetDir.position;
         for (int i = 1; i < tailLength; i++)
         {
-            Vector3 targetPos = segmentPoses[i - 1] + (segmentPoses[i] - segmentPoses[i - 1]).normalized * targetDistance;
-            segmentPoses[i] = Vector3.SmoothDamp(segmentPoses[i], targetPos, ref segmentV[i], smoothSpeed);
+            //Vector3 targetPos = segmentPoses[i - 1] + (segmentPoses[i] - segmentPoses[i - 1]).normalized * targetDistance;
+            //segmentPoses[i] = Vector3.SmoothDamp(segmentPoses[i], targetPos, ref segmentV[i], smoothSpeed);
+            segmentPoses[i] = Vector3.SmoothDamp(segmentPoses[i], segmentPoses[i - 1] + targetDir.forward * targetDistance, ref segmentV[i], smoothSpeed);
         }
         lineRenderer.SetPositions(segmentPoses);
     }
