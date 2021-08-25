@@ -269,11 +269,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   dashDuration: 0.3
-  attackRadius: 5
+  attackRadius: 7
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 128
-  attackPattern: []
+  attackPattern:
+  - {fileID: 1722055367633532379, guid: 39b7445ec8c1af34b841e839c0772ee5, type: 3}
+  - {fileID: 853839735463940206, guid: ce8bbd2f726b51c4e8012c9c93415a7b, type: 3}
 --- !u!114 &859000938735937828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +294,7 @@ MonoBehaviour:
   dashSpeed: 20
   maxDashCount: 1
   strength: 0
+  basicAttackCooldown: 0.25
 --- !u!114 &8953564629884126036
 MonoBehaviour:
   m_ObjectHideFlags: 0

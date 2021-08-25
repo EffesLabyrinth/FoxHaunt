@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float attackRadius;
     [SerializeField] LayerMask whatIsEnemy;
     [SerializeField] GameObject[] attackPattern;
+    float startBasicAttackCooldown;
     void Awake()
     {
         manager = GetComponent<PlayerManager>();
@@ -91,7 +92,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && !dashTrigger && startDashDuration <= 0) 
         {
-            Attack();
+            if(startBasicAttackCooldown<=0) Attack();
         }
     }
     void ExecuteAction()
@@ -137,31 +138,51 @@ public class PlayerController : MonoBehaviour
     }
     void Attack()
     {
+        startBasicAttackCooldown = manager.stat.GetBasicAttackCooldown();
+
+        CameraManager.Instance.movement.ScreenShake(0.1f,0.05f);
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, attackRadius, whatIsEnemy);
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         Physics.Raycast(ray, out hit, 100, whatIsGround);
         Vector3 attackDir;
         Vector3 attackPos;
+
+        
+        //if there are enemy within attack range
         if (colliders.Length > 0)
         {
-            GameObject temp = Instantiate(attackPattern[Random.Range(0, attackPattern.Length)], colliders[0].transform.position, Quaternion.identity);
-            temp.transform.forward = (colliders[0].transform.position - transform.position).normalized;
+            int nearestEnemyToMousePosition=0;
+            if (colliders.Length > 1)
+            {
+                for (int i = 1; i < colliders.Length; i++)
+                {
+                    if((colliders[i].transform.position-hit.point).sqrMagnitude< (colliders[nearestEnemyToMousePosition].transform.position - hit.point).sqrMagnitude)
+                    {
+                        nearestEnemyToMousePosition = i;
+                    }
+                }
+            }
+            attackPos = colliders[nearestEnemyToMousePosition].transform.position;
         }
+        //if there are no enemy within attack range
         else
         {
+            //if mouse outside of attack range,snap and attack at the furthest attack range in the mouse direction
             if ((hit.point - transform.position).sqrMagnitude > attackRadius * attackRadius)
             {
                 attackDir = (hit.point - transform.position).normalized;
                 attackPos = transform.position + attackDir * attackRadius;
             }
+            //if mouse nside attack range, attack at mouse position
             else
             {
                 attackPos = hit.point;
             }
-            GameObject temp = Instantiate(attackPattern[Random.Range(0, attackPattern.Length)], attackPos, Quaternion.identity);
-            temp.transform.forward = (attackPos - transform.position).normalized;
         }
+        GameObject temp = Instantiate(attackPattern[Random.Range(0, attackPattern.Length)], attackPos, Quaternion.identity);
+        temp.transform.forward = (attackPos - transform.position).normalized;
     }
     bool GroundCheck()
     {
@@ -181,6 +202,7 @@ public class PlayerController : MonoBehaviour
     void TimerUpdate()
     {
         if (startDashDuration > 0) startDashDuration -= Time.deltaTime;
+        if (startBasicAttackCooldown > 0) startBasicAttackCooldown -= Time.deltaTime;
     }
     private void OnDrawGizmos()
     {
