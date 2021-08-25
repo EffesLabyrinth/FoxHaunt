@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector] public PlayerController controller;
     [HideInInspector] public PlayerStat stat;
     [HideInInspector] public PlayerAnim anim;
+    public TailAnimation tailAnim;
 
     private void Awake()
     {

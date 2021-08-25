@@ -249,6 +249,7 @@ MonoBehaviour:
   controller: {fileID: 0}
   stat: {fileID: 0}
   anim: {fileID: 0}
+  tailAnim: {fileID: 6149345725979361830}
 --- !u!114 &859000938735937827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,7 +274,7 @@ MonoBehaviour:
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 128
-  attackPattern:
+  basicAttackPattern:
   - {fileID: 1722055367633532379, guid: 39b7445ec8c1af34b841e839c0772ee5, type: 3}
   - {fileID: 853839735463940206, guid: ce8bbd2f726b51c4e8012c9c93415a7b, type: 3}
 --- !u!114 &859000938735937828
@@ -294,7 +295,7 @@ MonoBehaviour:
   dashSpeed: 20
   maxDashCount: 1
   strength: 0
-  basicAttackCooldown: 0.25
+  basicAttackCooldown: 0.2
 --- !u!114 &8953564629884126036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,7 +309,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRend: {fileID: 859000937810842532}
-  sprites: {fileID: 859000938366018983}
   tailPos: {fileID: 3644750376051830515}
   dashAfterEffect: {fileID: 8191979729017058996, guid: 1f571c39c7258a44f993d0a790d0c2c9, type: 3}
 --- !u!1 &1687126209618850367
@@ -606,6 +606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f551c84859f564797a97337f8247a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 859000938735937826}
   tailLength: 25
   smoothSpeed: 0.01
   targetDir: {fileID: 3644750376051830515}

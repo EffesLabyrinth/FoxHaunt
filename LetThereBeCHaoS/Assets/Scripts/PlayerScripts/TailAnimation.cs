@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class TailAnimation : MonoBehaviour
 {
+    [SerializeField] PlayerManager manager;
     LineRenderer lineRenderer;
-    Rigidbody rb;
+
+    float tailPosOriginal;
 
     [SerializeField] int tailLength;
 
@@ -22,6 +24,7 @@ public class TailAnimation : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+        tailPosOriginal = transform.position.x;
     }
     // Start is called before the first frame update
     void Start()
@@ -29,24 +32,12 @@ public class TailAnimation : MonoBehaviour
         lineRenderer.positionCount = tailLength;
         segmentPoses = new Vector3[tailLength];
         segmentV = new Vector3[tailLength];
-        rb = PlayerManager.Instance.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
         wiggleDir.localRotation = Quaternion.Euler(0, Mathf.Sin(Time.time * wiggleSpeed) * wiggleMagnitude, 0);
-
-        if (rb.velocity.z > 0 && transform.localEulerAngles.y == 0)
-        {
-            lineRenderer.sortingOrder = 1;
-            transform.Rotate(new Vector3(0, 180, 0), Space.Self);
-        } 
-        else if(rb.velocity.z < 0 && transform.localEulerAngles.y == 180)
-        {
-            lineRenderer.sortingOrder = -1;
-            transform.Rotate(new Vector3(0, -180, 0), Space.Self);
-        }
 
         segmentPoses[0] = targetDir.position;
         for (int i = 1; i < tailLength; i++)
@@ -56,5 +47,21 @@ public class TailAnimation : MonoBehaviour
             segmentPoses[i] = Vector3.SmoothDamp(segmentPoses[i], segmentPoses[i - 1] + targetDir.forward * targetDistance, ref segmentV[i], smoothSpeed);
         }
         lineRenderer.SetPositions(segmentPoses);
+    }
+    public void UpdateTailDirection()
+    {
+        if (!manager.anim.isFacingFront && base.transform.localEulerAngles.y == 0)
+        {
+            lineRenderer.sortingOrder = 1;
+            base.transform.Rotate(new Vector3(0, 180, 0), Space.Self);
+        }
+        else if (manager.anim.isFacingFront && base.transform.localEulerAngles.y == 180)
+        {
+            lineRenderer.sortingOrder = -1;
+            base.transform.Rotate(new Vector3(0, -180, 0), Space.Self);
+        }
+        if (manager.anim.isFacingRight) transform.localPosition = new Vector3(tailPosOriginal, transform.localPosition.y, transform.localPosition.z);
+        else if(!manager.anim.isFacingRight) transform.localPosition = new Vector3(-tailPosOriginal, transform.localPosition.y, transform.localPosition.z);
+
     }
 }

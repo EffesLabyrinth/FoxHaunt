@@ -32,8 +32,9 @@ public class PlayerController : MonoBehaviour
     //attack
     [SerializeField] float attackRadius;
     [SerializeField] LayerMask whatIsEnemy;
-    [SerializeField] GameObject[] attackPattern;
+    [SerializeField] GameObject[] basicAttackPattern;
     float startBasicAttackCooldown;
+    int currentAttackPattern;
     void Awake()
     {
         manager = GetComponent<PlayerManager>();
@@ -140,7 +141,7 @@ public class PlayerController : MonoBehaviour
     {
         startBasicAttackCooldown = manager.stat.GetBasicAttackCooldown();
 
-        CameraManager.Instance.movement.ScreenShake(0.1f,0.05f);
+        CameraManager.Instance.movement.ScreenShake(0.1f,0.03f);
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, attackRadius, whatIsEnemy);
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -181,7 +182,9 @@ public class PlayerController : MonoBehaviour
                 attackPos = hit.point;
             }
         }
-        GameObject temp = Instantiate(attackPattern[Random.Range(0, attackPattern.Length)], attackPos, Quaternion.identity);
+
+        currentAttackPattern = ++currentAttackPattern % basicAttackPattern.Length;
+        GameObject temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
         temp.transform.forward = (attackPos - transform.position).normalized;
     }
     bool GroundCheck()

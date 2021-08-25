@@ -1605,6 +1605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothTime: 25
+  enableScreenShake: 1
   shakeDuration: 0.1
   shakeMagnitude: 0.1
 --- !u!114 &963194230

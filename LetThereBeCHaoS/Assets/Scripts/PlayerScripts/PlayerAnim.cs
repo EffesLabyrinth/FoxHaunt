@@ -8,12 +8,15 @@ public class PlayerAnim : MonoBehaviour
     Animator anim;
     Rigidbody rb;
     [SerializeField] SpriteRenderer spriteRend;
-    [SerializeField] Transform sprites;
     [SerializeField] Transform tailPos;
 
     [SerializeField] GameObject dashAfterEffect;
     float startDashTime;
     Queue<GameObject> dashPool;
+
+    //facingdirection
+    public bool isFacingRight { private set; get; }
+    public bool isFacingFront { private set; get; }
     GameObject GetDashFromPool()
     {
         if (dashPool.Count > 0)
@@ -34,16 +37,17 @@ public class PlayerAnim : MonoBehaviour
     }
     private void Update()
     {
-        if (rb.velocity.z > 0) anim.Play("player_idle_back_right");
-        else if (rb.velocity.z < 0) anim.Play("player_idle_front_right");
+        if (rb.velocity.x > 0) isFacingRight = true;
+        else if (rb.velocity.x < 0) isFacingRight = false;
+        if (rb.velocity.z > 0) isFacingFront = false;
+        else if (rb.velocity.z < 0) isFacingFront = true;
 
-        if (rb.velocity.x > 0 && sprites.localScale.x < 0) Flip();
-        else if (rb.velocity.x < 0 && sprites.localScale.x > 0) Flip();
-    }
-    void Flip()
-    {
-        sprites.localScale = new Vector3(sprites.localScale.x * -1, sprites.localScale.y, sprites.localScale.z);
-        tailPos.localPosition = new Vector3(tailPos.localPosition.x * -1, tailPos.localPosition.y, tailPos.localPosition.z);
+        if (isFacingFront && isFacingRight) anim.Play("player_idle_front_right");
+        else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
+        else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
+        else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+
+        manager.tailAnim.UpdateTailDirection();
     }
     public void DashAfterEffect(float dashDuration)
     {

@@ -12,6 +12,7 @@ public class CameraMovement : MonoBehaviour
     Vector3 followPosition;
 
     //screenShake
+    public bool enableScreenShake;
     Vector3 screenShakeOffset;
     [SerializeField] float shakeDuration;
     [SerializeField] float shakeMagnitude;
@@ -40,10 +41,13 @@ public class CameraMovement : MonoBehaviour
     }
     public void ScreenShake(float duration, float magnitude)
     {
-        startShakeDuration = duration;
-        startShakeMagnitude = magnitude;
-        StopCoroutine(StartScreenShake());
-        StartCoroutine(StartScreenShake());
+        if (enableScreenShake)
+        {
+            startShakeDuration = duration;
+            startShakeMagnitude = magnitude;
+            StopCoroutine(StartScreenShake());
+            StartCoroutine(StartScreenShake());
+        }
     }
     IEnumerator StartScreenShake()
     {
