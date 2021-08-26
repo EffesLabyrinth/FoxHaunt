@@ -8,15 +8,18 @@ public class PlayerAnim : MonoBehaviour
     Animator anim;
     Rigidbody rb;
     [SerializeField] SpriteRenderer spriteRend;
-    [SerializeField] Transform tailPos;
 
+    //dash
     [SerializeField] GameObject dashAfterEffect;
     float startDashTime;
     Queue<GameObject> dashPool;
 
     //facingdirection
-    public bool isFacingRight { private set; get; }
-    public bool isFacingFront { private set; get; }
+    public bool isFacingRight { set; get; }
+    public bool isFacingFront { set; get; }
+
+    //attack
+    float startAttackingDuration;
     GameObject GetDashFromPool()
     {
         if (dashPool.Count > 0)
@@ -34,18 +37,24 @@ public class PlayerAnim : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         dashPool = new Queue<GameObject>();
+        isFacingFront = true;
     }
     private void Update()
     {
-        if (rb.velocity.x > 0) isFacingRight = true;
-        else if (rb.velocity.x < 0) isFacingRight = false;
-        if (rb.velocity.z > 0) isFacingFront = false;
-        else if (rb.velocity.z < 0) isFacingFront = true;
+        TimerUpdate();
 
-        if (isFacingFront && isFacingRight) anim.Play("player_idle_front_right");
-        else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
-        else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
-        else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+        if (startAttackingDuration <= 0)
+        {
+            if (rb.velocity.x > 0) isFacingRight = true;
+            else if (rb.velocity.x < 0) isFacingRight = false;
+            if (rb.velocity.z > 0) isFacingFront = false;
+            else if (rb.velocity.z < 0) isFacingFront = true;
+
+            if (isFacingFront && isFacingRight) anim.Play("player_idle_front_right");
+            else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
+            else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
+            else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+        }
 
         manager.tailAnim.UpdateTailDirection();
     }
@@ -74,6 +83,19 @@ public class PlayerAnim : MonoBehaviour
             }
             if (startDashTime > 0) yield return null;
         } while (startDashTime > 0);
-        
+    }
+    public void attackAnimation(float attackingDuration)
+    {
+        startAttackingDuration = attackingDuration;
+
+        if (isFacingFront && isFacingRight) anim.Play("player_idle_front_right");
+        else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
+        else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
+        else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+    }
+    void TimerUpdate()
+    {
+        if (startAttackingDuration > 0) startAttackingDuration -= Time.deltaTime;
+
     }
 }
