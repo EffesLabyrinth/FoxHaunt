@@ -51,10 +51,9 @@ public class PlayerAnim : MonoBehaviour
             if (rb.velocity.z > 0) isFacingFront = false;
             else if (rb.velocity.z < 0) isFacingFront = true;
 
-            if (isFacingFront && isFacingRight) anim.Play("player_idle_front_right");
-            else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
-            else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
-            else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+            if (rb.velocity.y > 1f) JumpAnimation();
+            else if (rb.velocity.y < -1f) FallAnimation();
+            else IdleAnimation();
         }
 
         manager.tailAnim.UpdateTailDirection();
@@ -85,7 +84,7 @@ public class PlayerAnim : MonoBehaviour
             if (startDashTime > 0) yield return null;
         } while (startDashTime > 0);
     }
-    public void attackAnimation(float attackingDuration)
+    public void AttackAnimation(float attackingDuration)
     {
         startAttackingDuration = attackingDuration;
 
@@ -93,6 +92,27 @@ public class PlayerAnim : MonoBehaviour
         else if (isFacingFront && !isFacingRight) anim.Play("player_attack_front_left", 0, 0);
         else if (!isFacingFront && isFacingRight) anim.Play("player_attack_back_right", 0, 0);
         else if (!isFacingFront && !isFacingRight) anim.Play("player_attack_back_left", 0, 0);
+    }
+    void IdleAnimation()
+    {
+        if (isFacingFront && isFacingRight) anim.Play("player_idle_front_right");
+        else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
+        else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
+        else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+    }
+    void JumpAnimation()
+    {
+        if (isFacingFront && isFacingRight) anim.Play("player_jump_front_right");
+        else if (isFacingFront && !isFacingRight) anim.Play("player_jump_front_left");
+        else if (!isFacingFront && isFacingRight) anim.Play("player_jump_back_right");
+        else if (!isFacingFront && !isFacingRight) anim.Play("player_jump_back_left");
+    }
+    void FallAnimation()
+    {
+        if (isFacingFront && isFacingRight) anim.Play("player_fall_front_right");
+        else if (isFacingFront && !isFacingRight) anim.Play("player_fall_front_left");
+        else if (!isFacingFront && isFacingRight) anim.Play("player_fall_back_right");
+        else if (!isFacingFront && !isFacingRight) anim.Play("player_fall_back_left");
     }
     void TimerUpdate()
     {
