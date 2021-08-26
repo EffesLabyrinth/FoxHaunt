@@ -38,6 +38,7 @@ public class PlayerAnim : MonoBehaviour
         anim = GetComponent<Animator>();
         dashPool = new Queue<GameObject>();
         isFacingFront = true;
+        isFacingRight = true;
     }
     private void Update()
     {
@@ -88,10 +89,10 @@ public class PlayerAnim : MonoBehaviour
     {
         startAttackingDuration = attackingDuration;
 
-        if (isFacingFront && isFacingRight) anim.Play("player_idle_front_right");
-        else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
-        else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
-        else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+        if (isFacingFront && isFacingRight) anim.Play("player_attack_front_right",0,0);
+        else if (isFacingFront && !isFacingRight) anim.Play("player_attack_front_left", 0, 0);
+        else if (!isFacingFront && isFacingRight) anim.Play("player_attack_back_right", 0, 0);
+        else if (!isFacingFront && !isFacingRight) anim.Play("player_attack_back_left", 0, 0);
     }
     void TimerUpdate()
     {

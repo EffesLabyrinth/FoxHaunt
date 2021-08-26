@@ -270,7 +270,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   dashDuration: 0.3
-  enableSnapToEnemy: 0
+  enableSnapToEnemy: 1
   attackRadius: 7
   whatIsEnemy:
     serializedVersion: 2
@@ -299,7 +299,7 @@ MonoBehaviour:
   dashSpeed: 20
   maxDashCount: 1
   strength: 0
-  basicAttackCooldown: 0.2
+  basicAttackCooldown: 0.25
 --- !u!114 &8953564629884126036
 MonoBehaviour:
   m_ObjectHideFlags: 0

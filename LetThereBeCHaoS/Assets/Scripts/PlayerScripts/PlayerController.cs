@@ -58,8 +58,13 @@ public class PlayerController : MonoBehaviour
     void GetInput()
     {
         //xy movement
-        direction.x = Input.GetAxisRaw("Horizontal");
-        direction.y = Input.GetAxisRaw("Vertical");
+        direction = Vector2.zero;
+        if (startBasicAttackCooldown <= 0)
+        {
+            direction.x = Input.GetAxisRaw("Horizontal");
+            direction.y = Input.GetAxisRaw("Vertical");
+        }
+        
         //jump
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -191,7 +196,7 @@ public class PlayerController : MonoBehaviour
         else if (attackDir.x<0) manager.anim.isFacingRight = false;
         if (attackDir.z > 0) manager.anim.isFacingFront = false;
         else if (attackDir.z < 0) manager.anim.isFacingFront = true;
-        manager.anim.attackAnimation(manager.stat.GetBasicAttackCooldown()+0.2f);
+        manager.anim.attackAnimation(manager.stat.GetBasicAttackCooldown()+0.1f);
 
         currentAttackPattern = ++currentAttackPattern % basicAttackPattern.Length;
         GameObject temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
