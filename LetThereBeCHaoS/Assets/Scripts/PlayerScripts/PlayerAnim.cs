@@ -44,19 +44,36 @@ public class PlayerAnim : MonoBehaviour
     {
         TimerUpdate();
 
-        if (startAttackingDuration <= 0)
+        if (startDashTime > 0)
         {
-            if (rb.velocity.x > 0) isFacingRight = true;
-            else if (rb.velocity.x < 0) isFacingRight = false;
-            if (rb.velocity.z > 0) isFacingFront = false;
-            else if (rb.velocity.z < 0) isFacingFront = true;
+            CheckFacingDirection();
+            RunAnimation();
+        }
+        else if (startAttackingDuration <= 0)
+        {
+            CheckFacingDirection();
 
             if (rb.velocity.y > 1f) JumpAnimation();
             else if (rb.velocity.y < -1f) FallAnimation();
-            else IdleAnimation();
+            else if (manager.controller.GroundCheck()){
+                if (CheckHorizontalInput()) RunAnimation();
+                else IdleAnimation();
+            }
+            
         }
 
         manager.tailAnim.UpdateTailDirection();
+    }
+    bool CheckHorizontalInput()
+    {
+        return manager.controller.GetInputDirection().sqrMagnitude!=0;
+    }
+    void CheckFacingDirection()
+    {
+        if (rb.velocity.x > 0) isFacingRight = true;
+        else if (rb.velocity.x < 0) isFacingRight = false;
+        if (rb.velocity.z > 0) isFacingFront = false;
+        else if (rb.velocity.z < 0) isFacingFront = true;
     }
     public void DashAfterEffect(float dashDuration)
     {
@@ -99,6 +116,13 @@ public class PlayerAnim : MonoBehaviour
         else if (isFacingFront && !isFacingRight) anim.Play("player_idle_front_left");
         else if (!isFacingFront && isFacingRight) anim.Play("player_idle_back_right");
         else if (!isFacingFront && !isFacingRight) anim.Play("player_idle_back_left");
+    }
+    void RunAnimation()
+    {
+        if (isFacingFront && isFacingRight) anim.Play("player_run_front_right");
+        else if (isFacingFront && !isFacingRight) anim.Play("player_run_front_left");
+        else if (!isFacingFront && isFacingRight) anim.Play("player_run_back_right");
+        else if (!isFacingFront && !isFacingRight) anim.Play("player_run_back_left");
     }
     void JumpAnimation()
     {

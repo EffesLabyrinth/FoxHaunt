@@ -61,8 +61,7 @@ public class PlayerController : MonoBehaviour
         direction = Vector2.zero;
         if (startBasicAttackCooldown <= 0)
         {
-            direction.x = Input.GetAxisRaw("Horizontal");
-            direction.y = Input.GetAxisRaw("Vertical");
+            direction = GetInputDirection();
         }
         
         //jump
@@ -102,6 +101,10 @@ public class PlayerController : MonoBehaviour
         {
             if(startBasicAttackCooldown<=0) Attack();
         }
+    }
+    public Vector2 GetInputDirection()
+    {
+        return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
     void ExecuteAction()
     {
@@ -202,7 +205,7 @@ public class PlayerController : MonoBehaviour
         GameObject temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
         temp.transform.forward = (attackPos - transform.position).normalized;
     }
-    bool GroundCheck()
+    public bool GroundCheck()
     {
         return (Physics.OverlapSphere(groundCheckPos.position, groundCheckRadius, whatIsGround)).Length > 0;
     }
