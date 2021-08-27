@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: KitsuneChaosMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 5ceb6a17cd6856e4bbf627754a5463f3, type: 3}
+  m_Name: DashChaosMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: 28b2481e5da52cd42b0f6c352e545164, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: c10e8ea3f9fed8b48afcb682e8d3341c, type: 3}
+        m_Texture: {fileID: 2800000, guid: a4bfc417ac6ae884487ad43ecbfba299, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -35,11 +35,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - Vector1_1cf93d4da9ff43c484de35d86ea641ac: 1
-    - Vector1_411b4e3787024c75b1f96007e8a81d36: 2
-    - Vector1_e71c7e21a52a46a38dc00e6b527cfcad: 1.32
+    m_Floats: []
     m_Colors:
-    - Color_60d2b3910ba64f4d920bcc5bb3adda8a: {r: 2.3514767, g: 0.13310245, b: 2.3514767, a: 0}
-    - Color_dcc4d3da4a4e4f358004c889201a9ed2: {r: 0, g: 0, b: 0, a: 0}
+    - Color_a43a51f134b4455098e427dc9138c631: {r: 2.9960785, g: 0.17254902, b: 2.9960785, a: 0}
   m_BuildTextureStacks: []

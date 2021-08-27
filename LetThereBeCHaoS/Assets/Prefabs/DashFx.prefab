@@ -50,7 +50,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ceb9e421220495f47909b5b1461ec8e2, type: 2}
+  - {fileID: 2100000, guid: 1bcb4bb3f29aef945b8650e3890e870e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -128,3 +128,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: 0.5
   spriteRend: {fileID: 5271141918321648213}
+  normal: {fileID: 2100000, guid: ceb9e421220495f47909b5b1461ec8e2, type: 2}
+  chaos: {fileID: 2100000, guid: 1bcb4bb3f29aef945b8650e3890e870e, type: 2}

@@ -300,6 +300,12 @@ MonoBehaviour:
   maxDashCount: 1
   strength: 0
   basicAttackCooldown: 0.25
+  basicAttackCooldownChaos: 0.5
+  chaosForm: 0
+  maxChaosMeter: 15
+  currentChaosMeter: 0
+  chaosMeterReplenishSpeed: 0.5
+  chaosMeterDepleteSpeed: 1
 --- !u!114 &8953564629884126036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,6 +320,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRend: {fileID: 859000937810842532}
   dashAfterEffect: {fileID: 8191979729017058996, guid: 1f571c39c7258a44f993d0a790d0c2c9, type: 3}
+  normalMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  chaosMat: {fileID: 2100000, guid: 5a8b9cbc6e3a7624d87e1a1e74013a5c, type: 2}
+  bodyRenderer: {fileID: 859000937810842532}
 --- !u!1 &1687126209618850367
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,9 +365,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
-  m_Range: 6.88
+  m_Range: 7
   m_SpotAngle: 23
   m_InnerSpotAngle: 10
   m_CookieSize: 10

@@ -20,6 +20,11 @@ public class PlayerAnim : MonoBehaviour
 
     //attack
     float startAttackingDuration;
+
+    //chaos
+    [SerializeField] Material normalMat;
+    [SerializeField] Material chaosMat;
+    [SerializeField] SpriteRenderer bodyRenderer;
     GameObject GetDashFromPool()
     {
         if (dashPool.Count > 0)
@@ -94,8 +99,8 @@ public class PlayerAnim : MonoBehaviour
                 startTimeBtwEffect = timeBtwEffect;
                 GameObject temp = GetDashFromPool();
                 temp.transform.position = transform.position;
-                temp.GetComponent<ReturnToPool>().SetPool(dashPool);
-                temp.GetComponent<ReturnToPool>().SetSprite(spriteRend.sprite);
+                temp.GetComponent<DashEffectScript>().SetPool(dashPool);
+                temp.GetComponent<DashEffectScript>().SetSprite(spriteRend.sprite,manager.stat.GetChaosForm());
                 temp.SetActive(true);
             }
             if (startDashTime > 0) yield return null;
@@ -137,6 +142,17 @@ public class PlayerAnim : MonoBehaviour
         else if (isFacingFront && !isFacingRight) anim.Play("player_fall_front_left");
         else if (!isFacingFront && isFacingRight) anim.Play("player_fall_back_right");
         else if (!isFacingFront && !isFacingRight) anim.Play("player_fall_back_left");
+    }
+    public void ChaosForm(bool isTrue)
+    {
+        if (isTrue)
+        {
+            bodyRenderer.material = chaosMat;
+        }
+        else
+        {
+            bodyRenderer.material = normalMat;
+        }
     }
     void TimerUpdate()
     {

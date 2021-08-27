@@ -204,6 +204,8 @@ public class PlayerController : MonoBehaviour
         currentAttackPattern = ++currentAttackPattern % basicAttackPattern.Length;
         GameObject temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
         temp.transform.forward = (attackPos - transform.position).normalized;
+
+        manager.stat.GainChaos();
     }
     public bool GroundCheck()
     {

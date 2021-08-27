@@ -2,19 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReturnToPool : MonoBehaviour
+public class DashEffectScript : MonoBehaviour
 {
     Queue<GameObject> queue;
     [SerializeField] float timer;
     float startTimer;
     [SerializeField] SpriteRenderer spriteRend;
+    [SerializeField] Material normal;
+    [SerializeField] Material chaos;
     public void SetPool(Queue<GameObject> pool)
     {
         queue = pool;
     }
-    public void SetSprite(Sprite sprite)
+    public void SetSprite(Sprite sprite,bool isChaos)
     {
         spriteRend.sprite = sprite;
+        if (isChaos) spriteRend.material = chaos;
+        else spriteRend.material = normal;
     }
     private void Start()
     {
