@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] LayerMask whatIsEnemy;
     [SerializeField] LayerMask whatIsMouseRaycastTarget;
     [SerializeField] GameObject[] basicAttackPattern;
+    [SerializeField] GameObject[] basicAttackPatternChaos;
     float startBasicAttackCooldown;
     int currentAttackPattern;
     void Awake()
@@ -201,11 +202,22 @@ public class PlayerController : MonoBehaviour
         else if (attackDir.z < 0) manager.anim.isFacingFront = true;
         manager.anim.AttackAnimation(manager.stat.GetBasicAttackCooldown()+0.1f);
 
-        currentAttackPattern = ++currentAttackPattern % basicAttackPattern.Length;
-        GameObject temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
-        temp.transform.forward = (attackPos - transform.position).normalized;
+        GameObject temp;
+        if (manager.stat.GetChaosForm())
+        {
+            currentAttackPattern = ++currentAttackPattern % basicAttackPatternChaos.Length;
+            temp = Instantiate(basicAttackPatternChaos[currentAttackPattern], attackPos, Quaternion.identity);
+            temp.transform.forward = (attackPos - transform.position).normalized;
+        }
+        else
+        {
+            currentAttackPattern = ++currentAttackPattern % basicAttackPattern.Length;
+            temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
+            temp.transform.forward = (attackPos - transform.position).normalized;
+            manager.stat.GainChaos();
+        }
 
-        manager.stat.GainChaos();
+
     }
     public bool GroundCheck()
     {

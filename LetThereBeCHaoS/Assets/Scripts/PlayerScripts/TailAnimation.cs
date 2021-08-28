@@ -21,6 +21,9 @@ public class TailAnimation : MonoBehaviour
     [SerializeField] float wiggleMagnitude;
     [SerializeField] Transform wiggleDir;
 
+    [SerializeField] Material normal;
+    [SerializeField] Material chaos;
+
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -62,6 +65,10 @@ public class TailAnimation : MonoBehaviour
         }
         if (manager.anim.isFacingRight) transform.localPosition = new Vector3(tailPosOriginal, transform.localPosition.y, transform.localPosition.z);
         else if(!manager.anim.isFacingRight) transform.localPosition = new Vector3(-tailPosOriginal, transform.localPosition.y, transform.localPosition.z);
-
+    }
+    public void ChaosForm(bool isChaos)
+    {
+        if (isChaos) lineRenderer.material = chaos;
+        else lineRenderer.material = normal;
     }
 }

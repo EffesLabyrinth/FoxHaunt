@@ -281,6 +281,9 @@ MonoBehaviour:
   basicAttackPattern:
   - {fileID: 1722055367633532379, guid: 39b7445ec8c1af34b841e839c0772ee5, type: 3}
   - {fileID: 853839735463940206, guid: ce8bbd2f726b51c4e8012c9c93415a7b, type: 3}
+  basicAttackPatternChaos:
+  - {fileID: 2840335922124394953, guid: 7870e64f3be6a5b4ea708ef0cbc76629, type: 3}
+  - {fileID: 6612500445435516467, guid: 22ef7438a46342346b4888df3bfe591c, type: 3}
 --- !u!114 &859000938735937828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,7 +500,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -626,3 +629,5 @@ MonoBehaviour:
   wiggleSpeed: 10
   wiggleMagnitude: 20
   wiggleDir: {fileID: 7161638868574581255}
+  normal: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  chaos: {fileID: 2100000, guid: e239fd0984a654944bc87d90eb7f2a85, type: 2}

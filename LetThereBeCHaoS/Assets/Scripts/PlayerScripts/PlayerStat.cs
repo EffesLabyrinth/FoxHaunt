@@ -41,6 +41,7 @@ public class PlayerStat : MonoBehaviour
                 chaosForm = false;
                 currentChaosMeter = 0;
                 manager.anim.ChaosForm(chaosForm);
+                manager.tailAnim.ChaosForm(chaosForm);
                 //statChange
                 currentBasicAttackCooldown = basicAttackCooldown;
             }
@@ -69,6 +70,7 @@ public class PlayerStat : MonoBehaviour
                 currentChaosMeter = maxChaosMeter;
                 chaosForm = true;
                 manager.anim.ChaosForm(chaosForm);
+                manager.tailAnim.ChaosForm(chaosForm);
                 //statChange
                 currentBasicAttackCooldown = basicAttackCooldownChaos;
             }
