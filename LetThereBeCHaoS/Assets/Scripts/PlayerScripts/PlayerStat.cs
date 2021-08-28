@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerStat : MonoBehaviour
 {
     PlayerManager manager;
+    ChaosMeterUI chaosMeter;
 
     //stats
     [SerializeField] float moveSpeed;
@@ -29,21 +30,34 @@ public class PlayerStat : MonoBehaviour
     {
         manager = GetComponent<PlayerManager>();
         currentBasicAttackCooldown = basicAttackCooldown;
+        chaosForm = false;
+    }
+    private void Start()
+    {
+        chaosMeter = UIManager.Instance.chaosMeter;
+        chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter, false);
     }
     private void Update()
     {
         if (chaosForm)
         {
-            if (currentChaosMeter > 0) currentChaosMeter -= chaosMeterDepleteSpeed * Time.deltaTime;
+            if (currentChaosMeter > 0)
+            {
+                currentChaosMeter -= chaosMeterDepleteSpeed * Time.deltaTime;
+                if (currentChaosMeter < 0) currentChaosMeter = 0;
+                //updateUI
+                chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter, chaosForm);
+            } 
             else
             {
                 //exitingChaosMode
                 chaosForm = false;
-                currentChaosMeter = 0;
                 manager.anim.ChaosForm(chaosForm);
                 manager.tailAnim.ChaosForm(chaosForm);
                 //statChange
                 currentBasicAttackCooldown = basicAttackCooldown;
+                //updateUI
+                chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter, chaosForm);
             }
         }
     }
@@ -74,6 +88,8 @@ public class PlayerStat : MonoBehaviour
                 //statChange
                 currentBasicAttackCooldown = basicAttackCooldownChaos;
             }
+            //updateUI
+            chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter,chaosForm);
         }
     }
 }

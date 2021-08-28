@@ -305,9 +305,9 @@ MonoBehaviour:
   basicAttackCooldown: 0.25
   basicAttackCooldownChaos: 0.5
   chaosForm: 0
-  maxChaosMeter: 15
+  maxChaosMeter: 10
   currentChaosMeter: 0
-  chaosMeterReplenishSpeed: 0.5
+  chaosMeterReplenishSpeed: 0.4
   chaosMeterDepleteSpeed: 1
 --- !u!114 &8953564629884126036
 MonoBehaviour:
