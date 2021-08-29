@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerStat : MonoBehaviour
 {
@@ -31,6 +32,9 @@ public class PlayerStat : MonoBehaviour
     [SerializeField] float currentChaosMeter;
     [SerializeField] float chaosMeterReplenishSpeed;
     [SerializeField] float chaosMeterDepleteSpeed;
+
+    public bool enableSummonShades;
+    public GameObject shades;
     private void Awake()
     {
         manager = GetComponent<PlayerManager>();
@@ -67,7 +71,6 @@ public class PlayerStat : MonoBehaviour
                 chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter, chaosForm);
             }
         }
-        if (Input.GetKeyDown(KeyCode.Space)) Hurt(1);
     }
 
     //stats getter
@@ -95,6 +98,11 @@ public class PlayerStat : MonoBehaviour
                 chaosForm = true;
                 manager.anim.ChaosForm(chaosForm);
                 manager.tailAnim.ChaosForm(chaosForm);
+                if (enableSummonShades)
+                {
+                    Vector3 pos = new Vector3(Random.Range(-5f, 5f), Random.Range(1f, 3f), Random.Range(-5f, 5f));
+                    Instantiate(shades, transform.position + pos, Quaternion.identity);
+                }
                 //statChange
                 currentBasicAttackCooldown = basicAttackCooldownChaos;
             }
@@ -112,6 +120,7 @@ public class PlayerStat : MonoBehaviour
             {
                 currentHealth = 0;
                 isAlive = false;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
             healthMeter.UpdateHealthMeter(currentHealth, maxHealth);
         }

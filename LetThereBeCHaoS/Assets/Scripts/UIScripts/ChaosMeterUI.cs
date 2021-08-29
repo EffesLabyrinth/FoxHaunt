@@ -12,9 +12,9 @@ public class ChaosMeterUI : MonoBehaviour
     [SerializeField] Sprite containerBroken2;
     [SerializeField] Material normal;
     [SerializeField] Material chaos;
-    void Start()
+    private void Awake()
     {
-        meter.fillAmount = 1;
+        meter.fillAmount = 0;
     }
 
     // Update is called once per frame

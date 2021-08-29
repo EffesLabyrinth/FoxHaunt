@@ -14,10 +14,10 @@ public class HealthMeterUI : MonoBehaviour
     [SerializeField] Color medium;
     [SerializeField] Color low;
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        healthMeter.fillAmount = 0;
-        followMeter.fillAmount = 0;
+        healthMeter.fillAmount = 1;
+        followMeter.fillAmount = 1;
     }
 
     // Update is called once per frame

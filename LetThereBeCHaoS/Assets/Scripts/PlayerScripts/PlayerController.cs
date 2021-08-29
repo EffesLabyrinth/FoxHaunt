@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     float startDashDuration;
 
     //attack
+    public bool enableAttack;
+    public bool enableGainingChaos;
     public bool enableSnapToEnemy;
     [SerializeField] float attackRadius;
     [SerializeField] LayerMask whatIsEnemy;
@@ -150,74 +152,76 @@ public class PlayerController : MonoBehaviour
     }
     void Attack()
     {
-        startBasicAttackCooldown = manager.stat.GetBasicAttackCooldown();
-
-        CameraManager.Instance.movement.ScreenShake(0.1f,0.03f);
-
-        Collider[] colliders = Physics.OverlapSphere(transform.position, attackRadius, whatIsEnemy);
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Physics.Raycast(ray, out hit, 100, whatIsMouseRaycastTarget);
-        Vector3 attackDir;
-        Vector3 attackPos;
-
-        
-        //if there are enemy within attack range
-        if (enableSnapToEnemy && colliders.Length > 0)
+        if (enableAttack)
         {
-            int nearestEnemyToMousePosition=0;
-            if (colliders.Length > 1)
+            startBasicAttackCooldown = manager.stat.GetBasicAttackCooldown();
+
+            CameraManager.Instance.movement.ScreenShake(0.1f, 0.03f);
+
+            Collider[] colliders = Physics.OverlapSphere(transform.position, attackRadius, whatIsEnemy);
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Physics.Raycast(ray, out hit, 100, whatIsMouseRaycastTarget);
+            Vector3 attackDir;
+            Vector3 attackPos;
+
+
+            //if there are enemy within attack range
+            if (enableSnapToEnemy && colliders.Length > 0)
             {
-                for (int i = 1; i < colliders.Length; i++)
+                int nearestEnemyToMousePosition = 0;
+                if (colliders.Length > 1)
                 {
-                    if((colliders[i].transform.position-hit.point).sqrMagnitude< (colliders[nearestEnemyToMousePosition].transform.position - hit.point).sqrMagnitude)
+                    for (int i = 1; i < colliders.Length; i++)
                     {
-                        nearestEnemyToMousePosition = i;
+                        if ((colliders[i].transform.position - hit.point).sqrMagnitude < (colliders[nearestEnemyToMousePosition].transform.position - hit.point).sqrMagnitude)
+                        {
+                            nearestEnemyToMousePosition = i;
+                        }
                     }
                 }
+                attackDir = (colliders[nearestEnemyToMousePosition].transform.position - transform.position).normalized;
+                attackPos = colliders[nearestEnemyToMousePosition].transform.position;
             }
-            attackDir = (colliders[nearestEnemyToMousePosition].transform.position - transform.position).normalized;
-            attackPos = colliders[nearestEnemyToMousePosition].transform.position;
-        }
-        //if there are no enemy within attack range
-        else
-        {
-            //if mouse outside of attack range,snap and attack at the furthest attack range in the mouse direction
-            if ((hit.point - transform.position).sqrMagnitude > attackRadius * attackRadius)
-            {
-                attackDir = (hit.point - transform.position).normalized;
-                attackPos = transform.position + attackDir * attackRadius;
-            }
-            //if mouse nside attack range, attack at mouse position
+            //if there are no enemy within attack range
             else
             {
-                attackDir = (hit.point - transform.position).normalized;
-                attackPos = hit.point;
+                //if mouse outside of attack range,snap and attack at the furthest attack range in the mouse direction
+                if ((hit.point - transform.position).sqrMagnitude > attackRadius * attackRadius)
+                {
+                    attackDir = (hit.point - transform.position).normalized;
+                    attackPos = transform.position + attackDir * attackRadius;
+                }
+                //if mouse nside attack range, attack at mouse position
+                else
+                {
+                    attackDir = (hit.point - transform.position).normalized;
+                    attackPos = hit.point;
+                }
+            }
+
+            if (attackDir.x > 0) manager.anim.isFacingRight = true;
+            else if (attackDir.x < 0) manager.anim.isFacingRight = false;
+            if (attackDir.z > 0) manager.anim.isFacingFront = false;
+            else if (attackDir.z < 0) manager.anim.isFacingFront = true;
+            manager.anim.AttackAnimation(manager.stat.GetBasicAttackCooldown() + 0.1f);
+
+            GameObject temp;
+            if (manager.stat.GetChaosForm())
+            {
+                currentAttackPattern = ++currentAttackPattern % basicAttackPatternChaos.Length;
+                temp = Instantiate(basicAttackPatternChaos[currentAttackPattern], attackPos, Quaternion.identity);
+                temp.transform.forward = (attackPos - transform.position).normalized;
+            }
+            else
+            {
+                currentAttackPattern = ++currentAttackPattern % basicAttackPattern.Length;
+                temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
+                temp.transform.forward = (attackPos - transform.position).normalized;
+                
+                if(enableGainingChaos) manager.stat.GainChaos();
             }
         }
-
-        if (attackDir.x > 0) manager.anim.isFacingRight = true;
-        else if (attackDir.x<0) manager.anim.isFacingRight = false;
-        if (attackDir.z > 0) manager.anim.isFacingFront = false;
-        else if (attackDir.z < 0) manager.anim.isFacingFront = true;
-        manager.anim.AttackAnimation(manager.stat.GetBasicAttackCooldown()+0.1f);
-
-        GameObject temp;
-        if (manager.stat.GetChaosForm())
-        {
-            currentAttackPattern = ++currentAttackPattern % basicAttackPatternChaos.Length;
-            temp = Instantiate(basicAttackPatternChaos[currentAttackPattern], attackPos, Quaternion.identity);
-            temp.transform.forward = (attackPos - transform.position).normalized;
-        }
-        else
-        {
-            currentAttackPattern = ++currentAttackPattern % basicAttackPattern.Length;
-            temp = Instantiate(basicAttackPattern[currentAttackPattern], attackPos, Quaternion.identity);
-            temp.transform.forward = (attackPos - transform.position).normalized;
-            manager.stat.GainChaos();
-        }
-
-
     }
     public bool GroundCheck()
     {

@@ -27,6 +27,7 @@ public class ClawProjectile : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+            other.GetComponent<IDamagable>().TakeDamage(PlayerManager.Instance.stat.GetStrength());
             startNoOfTarget--;
             if (startNoOfTarget <= 0) Destroy(gameObject);
         }

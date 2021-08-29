@@ -160,9 +160,9 @@ GameObject:
   - component: {fileID: 859000938735937827}
   - component: {fileID: 859000938735937828}
   - component: {fileID: 8953564629884126036}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -270,6 +270,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   dashDuration: 0.3
+  enableAttack: 1
+  enableGainingChaos: 1
   enableSnapToEnemy: 1
   attackRadius: 7
   whatIsEnemy:
@@ -304,14 +306,16 @@ MonoBehaviour:
   maxJumpCount: 1
   dashSpeed: 20
   maxDashCount: 1
-  strength: 0
+  strength: 1
   basicAttackCooldown: 0.25
   basicAttackCooldownChaos: 0.5
   chaosForm: 0
   maxChaosMeter: 10
   currentChaosMeter: 0
-  chaosMeterReplenishSpeed: 0.4
-  chaosMeterDepleteSpeed: 1
+  chaosMeterReplenishSpeed: 0.6
+  chaosMeterDepleteSpeed: 2
+  enableSummonShades: 1
+  shades: {fileID: 1577045136711459348, guid: da60b84824cc61d41a43589f91bb8993, type: 3}
 --- !u!114 &8953564629884126036
 MonoBehaviour:
   m_ObjectHideFlags: 0
