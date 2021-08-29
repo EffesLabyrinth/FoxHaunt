@@ -6,8 +6,13 @@ public class PlayerStat : MonoBehaviour
 {
     PlayerManager manager;
     ChaosMeterUI chaosMeter;
+    HealthMeterUI healthMeter;
 
     //stats
+    [SerializeField] bool isAlive;
+    [SerializeField] float maxHealth;
+    [SerializeField] float currentHealth;
+
     [SerializeField] float moveSpeed;
 
     [SerializeField] float jumpPower;
@@ -36,6 +41,8 @@ public class PlayerStat : MonoBehaviour
     {
         chaosMeter = UIManager.Instance.chaosMeter;
         chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter, false);
+        healthMeter = UIManager.Instance.healthMeter;
+        healthMeter.UpdateHealthMeter(currentHealth, maxHealth);
     }
     private void Update()
     {
@@ -60,6 +67,7 @@ public class PlayerStat : MonoBehaviour
                 chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter, chaosForm);
             }
         }
+        if (Input.GetKeyDown(KeyCode.Space)) Hurt(1);
     }
 
     //stats getter
@@ -71,6 +79,8 @@ public class PlayerStat : MonoBehaviour
     public float GetStrength() { return strength; }
     public float GetBasicAttackCooldown() { return currentBasicAttackCooldown; }
     public bool GetChaosForm() { return chaosForm; }
+    public float GetMaxHealth() { return maxHealth; }
+    public float GetCurrentHealth() { return currentHealth; }
 
     //Chaos
     public void GainChaos()
@@ -91,5 +101,20 @@ public class PlayerStat : MonoBehaviour
             //updateUI
             chaosMeter.UpdateChaosMeter(currentChaosMeter, maxChaosMeter,chaosForm);
         }
+    }
+    //Hurt
+    public void Hurt(float damageReceived)
+    {
+        if (isAlive)
+        {
+            currentHealth -= damageReceived;
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                isAlive = false;
+            }
+            healthMeter.UpdateHealthMeter(currentHealth, maxHealth);
+        }
+        
     }
 }
