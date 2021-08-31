@@ -97,8 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAlive: 1
-  maxHealth: 30
-  currentHealth: 15
+  maxHealth: 20
+  currentHealth: 20
   moveSpeed: 4
   power: 1
   checkTargetRad: 50

@@ -137,7 +137,7 @@ public class Enemy1 : MonoBehaviour,IDamagable
     }
     void PlaySfx(AudioClip clip)
     {
-        sfxSource.clip = clip;
-        sfxSource.Play();
+        sfxSource.pitch = Random.Range(0.95f, 1.5f);
+        sfxSource.PlayOneShot(clip);
     }
 }
