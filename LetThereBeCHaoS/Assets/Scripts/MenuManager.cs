@@ -27,7 +27,6 @@ public class MenuManager : MonoBehaviour
         while (true)
         {
             float randomTimer = Random.Range(10f, 24f);
-            Debug.Log(randomTimer);
             yield return new WaitForSeconds(randomTimer);
             anim.Play("creepy", 0, 0);
         }

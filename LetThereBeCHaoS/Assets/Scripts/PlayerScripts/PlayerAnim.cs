@@ -49,25 +49,29 @@ public class PlayerAnim : MonoBehaviour
     {
         TimerUpdate();
 
-        if (startDashTime > 0)
+        if (Time.timeScale > 0)
         {
-            CheckFacingDirection();
-            RunAnimation();
-        }
-        else if (startAttackingDuration <= 0)
-        {
-            CheckFacingDirection();
-
-            if (rb.velocity.y > 1f) JumpAnimation();
-            else if (rb.velocity.y < -1f) FallAnimation();
-            else if (manager.controller.GroundCheck()){
-                if (CheckHorizontalInput()) RunAnimation();
-                else IdleAnimation();
+            if (startDashTime > 0)
+            {
+                CheckFacingDirection();
+                RunAnimation();
             }
-            
-        }
+            else if (startAttackingDuration <= 0)
+            {
+                CheckFacingDirection();
 
-        manager.tailAnim.UpdateTailDirection();
+                if (rb.velocity.y > 1f) JumpAnimation();
+                else if (rb.velocity.y < -1f) FallAnimation();
+                else if (manager.controller.GroundCheck())
+                {
+                    if (CheckHorizontalInput()) RunAnimation();
+                    else IdleAnimation();
+                }
+
+            }
+
+            manager.tailAnim.UpdateTailDirection();
+        }
     }
     bool CheckHorizontalInput()
     {

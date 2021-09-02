@@ -54,12 +54,13 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         TimerUpdate();
-        GetInput();
+        if(Time.timeScale>0) GetInput();
         ExecuteAction();
         JumpFallAdjustment();
     }
     void GetInput()
     {
+        Debug.Log("hmm");
         //xy movement
         direction = Vector2.zero;
         if (startBasicAttackCooldown <= 0)
