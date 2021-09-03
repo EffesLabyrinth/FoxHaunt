@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour
     }
     void GetInput()
     {
-        Debug.Log("hmm");
         //xy movement
         direction = Vector2.zero;
         if (startBasicAttackCooldown <= 0)
