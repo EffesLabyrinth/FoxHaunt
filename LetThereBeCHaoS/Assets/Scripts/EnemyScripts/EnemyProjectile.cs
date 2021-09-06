@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyProjectile : MonoBehaviour
 {
-    float damage;
     [SerializeField] Rigidbody rb;
+    float damage;
     bool startProjectile;
     float startProjectileDuration;
     [SerializeField] Transform sprites;

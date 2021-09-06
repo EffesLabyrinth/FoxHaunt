@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy1 : MonoBehaviour,IDamagable
+public class Enemy2 : MonoBehaviour,IDamagable
 {
     Rigidbody rb;
     [SerializeField] AudioSource sfxSource;
@@ -10,54 +10,82 @@ public class Enemy1 : MonoBehaviour,IDamagable
     [SerializeField] bool isAlive;
     [SerializeField] float maxHealth;
     [SerializeField] float currentHealth;
-
     [SerializeField] float moveSpeed;
-
     [SerializeField] float power;
 
-    //
+    //homing
     bool isTargeting;
     float targetingCheckTimer = 0.5f;
     float startTargetingCheckTimer;
+    Transform target;
     [SerializeField] float checkTargetRad;
     [SerializeField] LayerMask whatIsTarget;
-    Transform target;
+    [SerializeField] float stopDistance;
+    [SerializeField] float reverseDistance;
+    bool isReversing;
+
     //roaming
     [SerializeField] float roamingTime;
     float startRoamingTime;
+    
     //animations
     [SerializeField] Transform sprites;
+
     //attack
     [SerializeField] float timeBetweenAttack;
     float startTimeBetweenAttack;
+    [SerializeField] float timeBetweenMinionSpawn;
+    float startTimeBetweenMinionSpawn;
+    [SerializeField] GameObject minion;
+    [SerializeField] Transform minionSpawnPos;
+
     //hurt
     [SerializeField] GameObject hurtParticle;
     [SerializeField] AudioClip hurtSfx;
+
     private void Awake()
     {
         currentHealth = maxHealth;
         isAlive = true;
         rb = GetComponent<Rigidbody>();
     }
-    // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth;
         isAlive = true;
     }
-
-    // Update is called once per frame
     void Update()
     {
         UpdateTimer();
-        if (!isTargeting && startTargetingCheckTimer<=0)
+        //check for target within range
+        if (!isTargeting && startTargetingCheckTimer <= 0)
         {
             startTargetingCheckTimer = targetingCheckTimer;
             CheckForTarget();
         }
         if (isTargeting)
         {
-            rb.velocity = (target.position - transform.position).normalized * moveSpeed;
+            if((target.position-transform.position).sqrMagnitude> stopDistance * stopDistance) //home to target when distance greater than stop distance
+            {
+                isReversing = false;
+                rb.velocity = (target.position - transform.position).normalized * moveSpeed;
+            }
+            else if ((target.position - transform.position).sqrMagnitude < reverseDistance * reverseDistance) //reverse from target when distance less than reverse distance
+            {
+                isReversing = true;
+                rb.velocity = (target.position - transform.position).normalized * -moveSpeed;
+            }
+            else
+            {
+                isReversing = false;
+                rb.velocity = Vector3.zero;
+            }
+
+            if (startTimeBetweenMinionSpawn <= 0)
+            {
+                startTimeBetweenMinionSpawn = timeBetweenMinionSpawn;
+                Instantiate(minion, minionSpawnPos.position, Quaternion.identity);
+            }
         }
         else
         {
@@ -66,9 +94,9 @@ public class Enemy1 : MonoBehaviour,IDamagable
                 startRoamingTime = roamingTime;
                 Roam();
             }
-            
+
         }
-        Flip();
+        if(!isReversing) Flip();
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -76,7 +104,7 @@ public class Enemy1 : MonoBehaviour,IDamagable
         {
             Roam();
         }
-        else if (collision.gameObject.CompareTag("Player") && startTimeBetweenAttack<=0)
+        else if (collision.gameObject.CompareTag("Player") && startTimeBetweenAttack <= 0) // damage player when collided with them
         {
             startTimeBetweenAttack = timeBetweenAttack;
             collision.gameObject.GetComponent<PlayerStat>().Hurt(power);
@@ -84,12 +112,13 @@ public class Enemy1 : MonoBehaviour,IDamagable
     }
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && startTimeBetweenAttack <= 0)
+        if (collision.gameObject.CompareTag("Player") && startTimeBetweenAttack <= 0) // damage player when collided with them
         {
             startTimeBetweenAttack = timeBetweenAttack;
             collision.gameObject.GetComponent<PlayerStat>().Hurt(power);
         }
     }
+    //check for target within range
     void CheckForTarget()
     {
         Collider[] temp = Physics.OverlapSphere(transform.position, checkTargetRad, whatIsTarget);
@@ -101,7 +130,7 @@ public class Enemy1 : MonoBehaviour,IDamagable
     }
     void Roam()
     {
-        Vector2 dir = (new Vector2(Random.Range(-1, 1), Random.Range(-1, 1))).normalized * moveSpeed / 2f;
+        Vector2 dir = (new Vector2(Random.Range(-1, 1), Random.Range(-1, 1))).normalized * moveSpeed / 2f; //chose random horizontal direction mutliplied by half of home speed
         rb.velocity = new Vector3(dir.x, rb.velocity.y, dir.y);
     }
     public void TakeDamage(float damage)
@@ -110,7 +139,6 @@ public class Enemy1 : MonoBehaviour,IDamagable
         {
             currentHealth -= damage;
             Instantiate(hurtParticle, transform.position, Quaternion.identity);
-            PlaySfx(hurtSfx);
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
@@ -124,20 +152,31 @@ public class Enemy1 : MonoBehaviour,IDamagable
         if (startTargetingCheckTimer > 0) startTargetingCheckTimer -= Time.deltaTime;
         if (startRoamingTime > 0) startRoamingTime -= Time.deltaTime;
         if (startTimeBetweenAttack > 0) startTimeBetweenAttack -= Time.deltaTime;
+        if (startTimeBetweenMinionSpawn > 0) startTimeBetweenMinionSpawn -= Time.deltaTime;
     }
     void Flip()
     {
         if (rb.velocity.x > 0 && sprites.localScale.x < 0) sprites.localScale = new Vector3(-sprites.localScale.x, sprites.localScale.y, sprites.localScale.z);
         else if (rb.velocity.x < 0 && sprites.localScale.x > 0) sprites.localScale = new Vector3(-sprites.localScale.x, sprites.localScale.y, sprites.localScale.z);
     }
+    void PlaySfx(AudioClip clip)
+    {
+        if (!sfxSource.isPlaying)
+        {
+            sfxSource.pitch = Random.Range(0.95f, 1.5f);
+            sfxSource.clip = clip;
+            sfxSource.Play();
+        }
+    }
+    /*
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, checkTargetRad);
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, stopDistance);
+        Gizmos.color = Color.grey;
+        Gizmos.DrawWireSphere(transform.position, reverseDistance);
     }
-    void PlaySfx(AudioClip clip)
-    {
-        sfxSource.pitch = Random.Range(0.95f, 1.5f);
-        sfxSource.PlayOneShot(clip);
-    }
+    */
 }
